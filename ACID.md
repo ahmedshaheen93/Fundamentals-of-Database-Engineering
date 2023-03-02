@@ -67,7 +67,7 @@ SET BALANCE = BALANCE - 100
 WHERE ACCOUNT_ID = 1;
 ```
 
-##### 5- Update the Account 2 with + 100$
+##### 5- credit the Account 2 with 100$
 
 ```SQL
 UPDATE ACCOUNT
@@ -87,6 +87,12 @@ COMMIT TX1
 | 2          | 600     |
 ---
 ### Atomicity
+An atomic transaction is a transaction that will rollback all queries if one or
+more queries failed.
+
+* All Queries in a transaction must succeed
+* One query fails means all prior successful queries in the transaction should rollback
+* If the database went down prior to a commit of a transaction all successful queries in the transaction should rollback
 
 ### Consistency
 
