@@ -63,3 +63,18 @@
 |                                                                                                                                              | `INSERT INTO SALES VALUES (3, 10, 1)` <br/> a new row had inserted |
 | `SELECT SUM(QNT*PRICE) FROM SALES` <br/> We get $140 when it should be $130<br/> We read a committed value that showed up in our range query | `COMMIT TX2`                                                       |
 | `COMMIT TX1`                                                                                                                                 ||
+
+### Lost Updates example
+
+| PID | QNT | Price |
+|-----|-----|-------|
+| 1   | 10  | 5     |
+| 2   | 20  | 4     |
+
+| Transaction 1                                                                                                                                            | Transaction 2                                                                                                |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| ` BEGIN TX1;`                                                                                                                                            | `BEGIN TX2;`                                                                                                 | 
+| `UPDATE SALES SET QNT = QNT+10 WHERE PID =1`                                                                                                             |                                                                                                              |
+|                                                                                                                                                          | `UPDATE SALES SET QNT = QNT+5 WHERE PID =1` <br/> update the same row but with old value of date that was 10 |
+| `SELECT SUM(QNT*PRICE) FROM SALES` <br/> We get $155 when it should be $180<br/> Our update was overwritten another transaction and as a result **lost** | `COMMIT TX2`                                                                                                 |
+| `COMMIT TX1`                                                                                                                                             ||
